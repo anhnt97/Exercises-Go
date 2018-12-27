@@ -10,13 +10,9 @@ type rot13Reader struct {
 }
 func rot13(x byte) byte {
     switch {
-    case x >= 65 && x <= 77:
-        fallthrough
-    case x >= 97 && x <= 109:
+    case x >= 'A' && x <= 'M' || x >= 'a' && x <= 'm':
         x = x + 13
-    case x >= 78 && x <= 90:
-        fallthrough
-    case x >= 110 && x >= 122:
+    case x >= 'N' && x <= 'Z' || x >= 'n' && x <= 'z':
         x = x - 13
     }
     return x
@@ -29,7 +25,7 @@ func (r13 rot13Reader) Read(b []byte) (int, error){
 	return n,err
 }
 func main() {
-	s := strings.NewReader("Lbh penpxrq gur pbqr!")
+	s := strings.NewReader("Jul qvq gur puvpxra pebff gur ebnq?")
 	r := rot13Reader{s}
 	io.Copy(os.Stdout, &r)
 }

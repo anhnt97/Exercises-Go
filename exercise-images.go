@@ -1,7 +1,7 @@
 package main
 
 import (
-    "code.google.com/p/go-tour/pic"
+    "golang.org/x/tour/pic"
     "image"
     "image/color"
 )

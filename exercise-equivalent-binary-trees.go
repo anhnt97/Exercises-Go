@@ -1,12 +1,13 @@
 package main
 
 import (
-    "fmt"
-    "golang.org/x/tour/tree"
+	"fmt"
+
+	"golang.org/x/tour/tree"
 )
 
-func Walk(t *tree.Tree, ch chan int ){
-    walkTree(t, ch)
+func Walk(t *tree.Tree, ch chan int) {
+	walkTree(t, ch)
 	close(ch)
 }
 func walkTree(t *tree.Tree, ch chan int) {
@@ -19,8 +20,8 @@ func walkTree(t *tree.Tree, ch chan int) {
 	}
 }
 
-func Same(t1, t2 *tree.Tree) bool{
-    ch1, ch2 := make(chan int), make(chan int)
+func Same(t1, t2 *tree.Tree) bool {
+	ch1, ch2 := make(chan int), make(chan int)
 	go Walk(t1, ch1)
 	go Walk(t2, ch2)
 	for i := range ch1 {
