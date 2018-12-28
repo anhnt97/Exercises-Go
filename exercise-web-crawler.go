@@ -19,40 +19,40 @@ type fakeResult struct {
 }
 
 func Crawl(url string, depth int, fetcher Fetcher, ret chan string) {
-    defer close(ret) // close ret when return
-    if depth <= 0 {
-        return
-    }
+	defer close(ret) // close ret when return
+	if depth <= 0 {
+		return
+	}
 
-    body, urls, err := fetcher.Fetch(url)
-    if err != nil {
-        ret <- err.Error()
-        return
-    }
+	body, urls, err := fetcher.Fetch(url)
+	if err != nil {
+		ret <- err.Error()
+		return
+	}
 
-    ret <- fmt.Sprintf("found: %s %q", url, body)
+	ret <- fmt.Sprintf("found: %s %q", url, body)
 
-    result := make([]chan string, len(urls))
-    for i, u := range urls {
-        result[i] = make(chan string)
-        go Crawl(u, depth-1, fetcher, result[i])
-    }
+	result := make([]chan string, len(urls))
+	for i, u := range urls {
+		result[i] = make(chan string)
+		go Crawl(u, depth-1, fetcher, result[i])
+	}
 
-    for i := range result {
-        for s := range result[i] {
-            ret <- s
+	for i := range result {
+		for s := range result[i] {
+			ret <- s
 		}
 	}
-    return
+	return
 }
 
 func main() {
 	result := make(chan string)
-	go Crawl("https://golang.org/", 4, fetcher,result)
+	go Crawl("https://golang.org/", 4, fetcher, result)
 
 	for s := range result {
-        fmt.Println(s)
-    }
+		fmt.Println(s)
+	}
 }
 
 // Fetch returns the body of URL and
