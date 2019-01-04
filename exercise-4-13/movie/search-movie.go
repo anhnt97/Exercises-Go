@@ -1,6 +1,8 @@
 package movie
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -30,6 +32,11 @@ func SearchMovie(keySearch string) (*Movie, error) {
 	resp.Body.Close()
 	return &result, nil
 }
+func GetMD5Hash(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
 func GetImage(url string) {
 	fmt.Println(url)
 	response, e := http.Get(url)
@@ -39,7 +46,8 @@ func GetImage(url string) {
 	defer response.Body.Close()
 
 	//open a file for writing
-	file, err := os.Create("D:/images/poster.jpg")
+	imgCode := GetMD5Hash(url)
+	file, err := os.Create("D:/images/poster_" + imgCode + ".jpg")
 	if err != nil {
 		log.Fatal(err)
 	}
