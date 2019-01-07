@@ -7,17 +7,16 @@ import (
 func eliminateAdjacentDuplicates(strings []string) []string {
 	if len(strings) == 0 {
 		return strings
-	} else {
-		result := strings[:1]
-		previous := strings[0]
-		for i, val := range strings {
-			if strings[i] != previous {
-				result = append(result, val)
-				previous = strings[i]
-			}
-		}
-		return result
 	}
+	result := strings[:1]
+	previous := strings[0]
+	for i, val := range strings {
+		if strings[i] != previous {
+			result = append(result, val)
+			previous = strings[i]
+		}
+	}
+	return result
 }
 
 func main() {
