@@ -20,16 +20,14 @@ func SearchMovie(keySearch string) (*Movie, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
 		return nil, fmt.Errorf("search query failed: %s", resp.Status)
 	}
 	var result Movie
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		resp.Body.Close()
 		return nil, err
 	}
-	resp.Body.Close()
 	return &result, nil
 }
 func GetMD5Hash(text string) string {
@@ -37,11 +35,12 @@ func GetMD5Hash(text string) string {
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
-func GetImage(url string) {
+func GetImage(url string) error {
 	fmt.Println(url)
 	response, e := http.Get(url)
 	if e != nil {
 		log.Fatal(e)
+		return e
 	}
 	defer response.Body.Close()
 
@@ -50,6 +49,7 @@ func GetImage(url string) {
 	file, err := os.Create("D:/images/poster_" + imgCode + ".jpg")
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 	defer file.Close()
 
@@ -57,6 +57,8 @@ func GetImage(url string) {
 	_, err = io.Copy(file, response.Body)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 	fmt.Println("Success!")
+	return nil
 }
